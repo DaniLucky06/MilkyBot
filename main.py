@@ -7,7 +7,6 @@ ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
 TOKEN = os.environ['TOKEN']
-nome = os.environ['nome']
 cognome = os.environ['cognome']
 kermitping = True
 prevplayers = []
@@ -24,7 +23,6 @@ blankstring = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 #status = server.status()
 
 client = discord.Client()
-
 
 @client.event
 async def on_ready():
@@ -64,7 +62,6 @@ async def on_ready():
 
         await asyncio.sleep(5)
 
-
 @client.event
 async def on_message(message):
     global kermitping
@@ -73,7 +70,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if nome in message.content.lower() or cognome in message.content.lower():
+    if cognome in message.content.lower():
         await asyncio.sleep(0.2)
         await message.delete()
     # bot channel commands
@@ -244,7 +241,6 @@ async def on_message(message):
                 msg = await message.channel.fetch_message(int(id))
                 await msg.delete()
             await message.delete()
-
 
 keep_alive()
 
