@@ -179,10 +179,11 @@ async def on_message(message):
     if 'wowza' in message.content:
         await message.channel.send('<:wowza:974932545152106606>')
 
-    if 'rip' in message.content.lower():
-      with open('rip-coffin.gif', 'rb') as file:
-        gif = discord.File(file)
-      await message.channel.send(file=gif)
+    for word in message.content.lower().split(" "):
+        if word == "rip":
+            with open('rip-coffin.gif', 'rb') as file:
+                gif = discord.File(file)
+            await message.channel.send(file=gif)
     
     if message.content.startswith('?nosummon') and (
             message.author.id == 790909302566813717
