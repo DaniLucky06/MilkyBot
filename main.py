@@ -6,7 +6,7 @@ from keepalive import keep_alive
 ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
-TOKEN = os.environ('TOKEN')
+TOKEN = os.environ['TOKEN']
 apiIP = "127.0.0.1"
 cognome = os.environ['cognome']
 kermitping = True
@@ -20,19 +20,46 @@ praisephrases = [
 lastpraise = ""
 blankstring = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
+def filterString(_string):
+	_allowedChars = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","1","2","3","4","5","6","7","8","9","0"," "]
+	_result = ""
+	for i in _string :
+		if i in _allowedChars:
+			_result += i
+	return _result
+
 #server = JavaServer.lookup(ip)
 #status = server.status()
 
-client = discord.Client(intents=discord.Intents.default()) # I dont fucking know why i had to add the intents thing but eihg 
+intents = discord.Intents.default()
+intents.members = True
+client = discord.Client(intents=intents) # I dont fucking know why i had to add the intents thing but eihg 
+
+async def getUserById(username):
+    user = await client.fetch_user(username)
+    return user
 
 @client.event
 async def on_ready():
     global prevplayers
     channel = client.get_channel(973943985552908328)
     channel2 = client.get_channel(1047182602005651628)
-
+    milkyway = client.get_guild(954125943495065661) # Milkyway server ID
     print('Logged in')
-    await channel.send('Bob online!')
+    try:
+        await channel.send('Bob online!')
+    except:
+        print("Bot not in Milkyway Server.")
+
+    userList = []
+    for i in milkyway.members:
+        interestedRoles = [954349361154900049, 973177697461239828, 991732194483654677, 970767639691546755, 1046194175885971456, 1040337661581344909]
+        for j in i.roles:
+            if j.id in interestedRoles:
+                if i.name not in userList:
+                    userList.append(filterString(i.name))
+    print(userList)
+
 
     while True:
         pars = requests.get(url, ).json()
@@ -54,11 +81,17 @@ async def on_ready():
             if len(prevplayers) <= len(players):
                 joinedplayers = list(set(players) - set(prevplayers))
                 for p in joinedplayers:
-                    await channel2.send(f'```diff\n+ {p} joined!\n```')
+                    try:
+                        await channel2.send(f'```diff\n+ {p} joined!\n```')
+                    except:
+                        pass
             elif len(prevplayers) >= len(players):
                 leftplayers = list(set(prevplayers) - set(players))
                 for p in leftplayers:
-                    await channel2.send(f'```diff\n- {p} left!\n```')
+                    try:
+                        await channel2.send(f'```diff\n- {p} left!\n```')
+                    except:
+                        pass
         prevplayers = players
 
         await asyncio.sleep(5)
