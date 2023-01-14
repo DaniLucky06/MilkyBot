@@ -1,4 +1,4 @@
-import discord, os, sys, asyncio, requests, random
+import discord, os, sys, asyncio, requests, random, traceback
 from keepalive import keep_alive
 
 #from mcstatus import JavaServer
@@ -6,8 +6,8 @@ from keepalive import keep_alive
 ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
-TOKEN = os.environ['TOKEN']
-nome = os.environ['nome']
+TOKEN = os.environ('TOKEN')
+apiIP = "127.0.0.1"
 cognome = os.environ['cognome']
 kermitping = True
 prevplayers = []
@@ -23,8 +23,7 @@ blankstring = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 #server = JavaServer.lookup(ip)
 #status = server.status()
 
-client = discord.Client()
-
+client = discord.Client(intents=discord.Intents.default()) # I dont fucking know why i had to add the intents thing but eihg 
 
 @client.event
 async def on_ready():
@@ -64,7 +63,6 @@ async def on_ready():
 
         await asyncio.sleep(5)
 
-
 @client.event
 async def on_message(message):
     global kermitping
@@ -73,7 +71,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if nome in message.content.lower() or cognome in message.content.lower():
+    if cognome in message.content.lower():
         await asyncio.sleep(0.2)
         await message.delete()
     # bot channel commands
@@ -179,10 +177,11 @@ async def on_message(message):
     if 'wowza' in message.content:
         await message.channel.send('<:wowza:974932545152106606>')
 
-    if 'rip' in message.content.lower():
-      with open('rip-coffin.gif', 'rb') as file:
-        gif = discord.File(file)
-      await message.channel.send(file=gif)
+    for word in message.content.lower().split(" "):
+        if word == "rip":
+            with open('rip-coffin.gif', 'rb') as file:
+                gif = discord.File(file)
+            await message.channel.send(file=gif)
     
     if message.content.startswith('?nosummon') and (
             message.author.id == 790909302566813717
@@ -244,12 +243,11 @@ async def on_message(message):
                 await msg.delete()
             await message.delete()
 
-
 keep_alive()
 
 try:
     client.run(TOKEN)
 except:
-    print('\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n')
+    print(f'\n\n\nERROR OCCURED WHILST CONNECTING TO DISCORD API: {traceback.print_exc()}\nRESTARTING NOW\n\n\n')
     os.system('python restarting.py')
     os.system("kill 1")
