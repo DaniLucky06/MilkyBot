@@ -1,4 +1,4 @@
-import discord, os, sys, asyncio, requests, random
+import discord, os, sys, asyncio, requests, random, traceback
 from keepalive import keep_alive
 
 #from mcstatus import JavaServer
@@ -6,7 +6,8 @@ from keepalive import keep_alive
 ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ('token')
+apiIP = "127.0.0.1"
 cognome = os.environ['cognome']
 kermitping = True
 prevplayers = []
@@ -22,7 +23,7 @@ blankstring = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 #server = JavaServer.lookup(ip)
 #status = server.status()
 
-client = discord.Client()
+client = discord.Client(intents=discord.Intents.default()) # I dont fucking know why i had to add the intents thing but eihg 
 
 @client.event
 async def on_ready():
@@ -247,6 +248,6 @@ keep_alive()
 try:
     client.run(TOKEN)
 except:
-    print('\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n')
+    print(f'\n\n\nERROR OCCURED WHILST CONNECTING TO DISCORD API: {traceback.print_exc()}\nRESTARTING NOW\n\n\n')
     os.system('python restarting.py')
     os.system("kill 1")
