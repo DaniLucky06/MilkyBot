@@ -6,7 +6,7 @@ from keepalive import keep_alive
 ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
-TOKEN = os.environ['TOKEN']
+TOKEN = "MTA2Mzg5MTQwMDI1MDM2ODAzMQ.Gowdwn.m1zbB8QKe1gYOkSyhV3yw38QsVZuRA9kdPaS7A"
 apiIP = "127.0.0.1"
 cognome = os.environ['cognome']
 kermitping = True
@@ -47,9 +47,9 @@ async def on_ready():
     milkyway = client.get_guild(954125943495065661) # Milkyway server ID
     print('Logged in')
     try:
-        await channel.send('Bob online!')
+        await channel.send('ooga booga bobby online!')
     except:
-        print("Bot not in Milkyway Server.")
+        print("Error whilst sending message. Is the bot in the milkyway server with the right privilages? :P")
 
     userList = []
     for i in milkyway.members:
@@ -57,7 +57,7 @@ async def on_ready():
         for j in i.roles:
             if j.id in interestedRoles:
                 if i.name not in userList:
-                    userList.append(filterString(i.name))
+                    userList.append(filterString(i.id))
     print(userList)
 
 
