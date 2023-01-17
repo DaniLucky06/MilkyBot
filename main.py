@@ -6,7 +6,7 @@ from keepalive import keep_alive
 ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
-TOKEN = "MTA2Mzg5MTQwMDI1MDM2ODAzMQ.Gowdwn.m1zbB8QKe1gYOkSyhV3yw38QsVZuRA9kdPaS7A"
+TOKEN = os.environ["TOKEN"]
 apiIP = "127.0.0.1"
 cognome = os.environ['cognome']
 kermitping = True
