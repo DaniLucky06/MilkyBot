@@ -1,4 +1,4 @@
-import discord, os, sys, asyncio, requests, random, traceback
+import discord, os, sys, asyncio, requests, random, traceback, json
 from keepalive import keep_alive
 
 #from mcstatus import JavaServer
@@ -15,7 +15,7 @@ praisephrases = [
     "Praise Kermit!", "God's will is in Kermit's hand",
     "Your mistakes will have consequences",
     "Kermit will bring salvation for those who praise it", "...just why?",
-    "May your L's be many, and your partners few", "**no.**"
+    "May your L's be many, and your partners few", "**no.**", "Kermit, the immortal"
 ]
 lastpraise = ""
 blankstring = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -39,6 +39,22 @@ async def getUserById(username):
     user = await client.fetch_user(username)
     return user
 
+def parseInterestedRoles(_guild):
+    userList = []
+    for i in _guild.members:
+        interestedRoles = [954349361154900049, 973177697461239828, 991732194483654677, 970767639691546755, 1046194175885971456, 1040337661581344909]
+        for j in i.roles:
+            if j.id in interestedRoles:
+                if i.name not in userList:
+                    userList.append({
+                        "name": filterString(str(i.name)),
+                        "discriminator": str(i.discriminator),
+                        "id": filterString(str(i.id)),
+                        "avatar": str(i.avatar),
+                    })
+    _data ='{ \"users\": ' + json.dumps(userList) + '}'
+    open("./data/users.json","w").write(_data)
+
 @client.event
 async def on_ready():
     global prevplayers
@@ -47,19 +63,12 @@ async def on_ready():
     milkyway = client.get_guild(954125943495065661) # Milkyway server ID
     print('Logged in')
     try:
-        await channel.send('ooga booga bobby online!')
+        onlineList = ['oogey boogey onliny booby', 'ooga booga bobby online', 'böb önlînê', 'bob online!', 'online bobby :D']
+        await channel.send(onlineList[random.randint(0, len(onlineList)-1)])
     except:
         print("Error whilst sending message. Is the bot in the milkyway server with the right privilages? :P")
 
-    userList = []
-    for i in milkyway.members:
-        interestedRoles = [954349361154900049, 973177697461239828, 991732194483654677, 970767639691546755, 1046194175885971456, 1040337661581344909]
-        for j in i.roles:
-            if j.id in interestedRoles:
-                if i.name not in userList:
-                    userList.append(filterString(i.id))
-    print(userList)
-
+    parseInterestedRoles(milkyway) # This function gets the interested roles and writes them to ./data/user.json
 
     while True:
         pars = requests.get(url, ).json()
