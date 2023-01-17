@@ -58,6 +58,7 @@ def parseInterestedRoles(_guild):
 @client.event
 async def on_ready():
     global prevplayers
+    global milkyway
     channel = client.get_channel(973943985552908328)
     channel2 = client.get_channel(1047182602005651628)
     milkyway = client.get_guild(954125943495065661) # Milkyway server ID
@@ -102,6 +103,8 @@ async def on_ready():
                     except:
                         pass
         prevplayers = players
+
+        parseInterestedRoles(milkyway)
 
         await asyncio.sleep(5)
 
