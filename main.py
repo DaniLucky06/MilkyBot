@@ -1,4 +1,4 @@
-import discord, os, sys, asyncio, requests, random, traceback
+import discord, os, sys, asyncio, requests, random, traceback, json
 from keepalive import keep_alive
 
 #from mcstatus import JavaServer
@@ -6,7 +6,7 @@ from keepalive import keep_alive
 ip = '81.16.61.58'
 url = f'https://api.mcsrvstat.us/2/{ip}'
 emojilist = ['🇰', '🇪', '🇷', '🇲', '🇮', '🇹']
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ["TOKEN"]
 apiIP = "127.0.0.1"
 cognome = os.environ['cognome']
 kermitping = True
@@ -15,7 +15,7 @@ praisephrases = [
     "Praise Kermit!", "God's will is in Kermit's hand",
     "Your mistakes will have consequences",
     "Kermit will bring salvation for those who praise it", "...just why?",
-    "May your L's be many, and your partners few", "**no.**"
+    "May your L's be many, and your partners few", "**no.**", "Kermit, the immortal"
 ]
 lastpraise = ""
 blankstring = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -39,27 +39,40 @@ async def getUserById(username):
     user = await client.fetch_user(username)
     return user
 
+def parseInterestedRoles(_guild):
+    userList = []
+    usrListTmp = []
+    for i in _guild.members:
+        interestedRoles = [954349361154900049, 973177697461239828, 991732194483654677, 970767639691546755, 1046194175885971456, 1040337661581344909]
+        for j in i.roles:
+            if j.id in interestedRoles:
+                if i.name not in usrListTmp:
+                    usrListTmp.append(i.name)
+                    userList.append({
+                        "name": filterString(str(i.name)),
+                        "discriminator": str(i.discriminator),
+                        "id": filterString(str(i.id)),
+                        "avatar": str(i.avatar),
+                    })
+    print(usrListTmp)
+    _data ='{ "users": ' + json.dumps(userList) + '}'
+    open("./data/users.json","w").write(_data)
+
 @client.event
 async def on_ready():
     global prevplayers
+    global milkyway
     channel = client.get_channel(973943985552908328)
     channel2 = client.get_channel(1047182602005651628)
     milkyway = client.get_guild(954125943495065661) # Milkyway server ID
     print('Logged in')
     try:
-        await channel.send('Bob online!')
+        onlineList = ['oogey boogey onliny booby']
+        await channel.send(onlineList[random.randint(0, len(onlineList)-1)])
     except:
-        print("Bot not in Milkyway Server.")
+        print("Error whilst sending message. Is the bot in the milkyway server with the right privilages? :P")
 
-    userList = []
-    for i in milkyway.members:
-        interestedRoles = [954349361154900049, 973177697461239828, 991732194483654677, 970767639691546755, 1046194175885971456, 1040337661581344909]
-        for j in i.roles:
-            if j.id in interestedRoles:
-                if i.name not in userList:
-                    userList.append(filterString(i.name))
-    print(userList)
-
+    parseInterestedRoles(milkyway) # This function gets the interested roles and writes them to ./data/user.json
 
     while True:
         pars = requests.get(url, ).json()
@@ -93,6 +106,8 @@ async def on_ready():
                     except:
                         pass
         prevplayers = players
+
+        parseInterestedRoles(milkyway)
 
         await asyncio.sleep(5)
 
