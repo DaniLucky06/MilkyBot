@@ -31,8 +31,7 @@ def filterString(_string):
 #server = JavaServer.lookup(ip)
 #status = server.status()
 
-intents = discord.Intents.default()
-intents.members = True
+intents = discord.Intents.all()
 client = discord.Client(intents=intents) # I dont fucking know why i had to add the intents thing but eihg 
 
 async def getUserById(username):
